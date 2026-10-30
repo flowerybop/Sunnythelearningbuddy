@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f7ff">
+<title>Sunny • Learning Buddy</title>
+<style>
+:root{--bg:#f3f7ff;--card:#fff;--ink:#23304a;--muted:#66718a;--purple:#7b61ff;--green:#239b75;--yellow:#ffd45c;--line:#e2e7f2;--pink:#fff0f8}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#f3f7ff,#fff6fd);color:var(--ink);font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif}
+header{max-width:1440px;margin:auto;padding:26px 24px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-size:1.45rem;font-weight:900;color:var(--purple);letter-spacing:.04em}.tag{font-size:.9rem;color:var(--muted);margin-left:8px}
+.stats{background:#e7e2ff;border-radius:999px;padding:10px 14px;font-weight:800;font-size:.9rem}
+.layout{max-width:1440px;margin:auto;padding:12px 24px 36px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 8px 28px #35466b0b}
+.sidebar{padding:22px 16px;align-self:start;position:sticky;top:12px;max-height:calc(100dvh - 24px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#d8d0ff transparent}
+.sunny-face{width:72px;height:72px;border-radius:50%;background:var(--yellow);border:3px solid #f0b938;margin:0 auto 8px;position:relative;box-shadow:0 5px 0 var(--sunny-shadow,#f0b93855);animation:bo[...]
+.sunny-accessory{position:absolute;z-index:4;top:-18px;left:50%;transform:translateX(-50%);font-size:1.65rem;line-height:1;filter:drop-shadow(0 2px 1px #0002);pointer-events:none;white-space:nowrap}.s[...]
+.sunny-accessory.cat-ears-accessory{top:-25px;left:50%;width:82px;height:45px;font-size:0;line-height:0;transform:translateX(-50%);filter:drop-shadow(0 2px 1px #0003);background:none}
+/* Soft, furry black cat ears inspired by the user's reference: dark outer fur and blush-pink centres. */
+.sunny-accessory.cat-ears-accessory:before,.sunny-accessory.cat-ears-accessory:after{content:"";position:absolute;top:0;width:29px;height:38px;background:repeating-linear-gradient(112deg,transparent 0[...]
+.sunny-accessory.cat-ears-accessory:before{left:3px;transform:rotate(-45deg)}
+.sunny-accessory.cat-ears-accessory:after{right:3px;transform:scaleX(-1) rotate(-45deg)}
+.sunny-accessory.cat-ears-accessory .inner-ear{position:absolute;top:7px;width:17px;height:24px;background:repeating-linear-gradient(120deg,transparent 0 3px,#ffb3d2 3.5px 4px,transparent 4.5px 6px),l[...]
+.sunny-accessory.cat-ears-accessory .inner-ear.left{left:9px;transform:rotate(-45deg)}
+.sunny-accessory.cat-ears-accessory .inner-ear.right{right:9px;transform:scaleX(-1) rotate(-45deg)}
+.shop-cat-ears{position:relative;display:block;width:82px;height:49px;margin:0 auto 2px;filter:drop-shadow(0 2px 1px #0003)}
+.shop-cat-ears:before,.shop-cat-ears:after{content:"";position:absolute;top:1px;width:30px;height:39px;background:repeating-linear-gradient(112deg,transparent 0 2px,#38363d 2.5px 3.2px,transparent 3.8[...]
+.shop-cat-ears:before{left:3px;transform:rotate(-45deg)}.shop-cat-ears:after{right:3px;transform:scaleX(-1) rotate(-45deg)}
+.shop-cat-ears .inner-ear{position:absolute;top:8px;width:18px;height:25px;background:repeating-linear-gradient(120deg,transparent 0 3px,#ffb3d2 3.5px 4px,transparent 4.5px 6px),linear-gradient(150deg[...]
+.shop-cat-ears .inner-ear.left{left:9px;transform:rotate(-45deg)}.shop-cat-ears .inner-ear.right{right:9px;transform:scaleX(-1) rotate(-45deg)}
+/* Cute fitted glasses: two matching translucent lenses, never a filled black shadow */
+.sunny-accessory.glasses-accessory{top:20px;left:50%;width:48px;height:17px;font-size:0;filter:none;transform:translateX(-50%);background:linear-gradient(#51417d,#51417d) 18px 6px/12px 2px no-repeat;}
+.sunny-accessory.glasses-accessory:before{content:"";position:absolute;left:0;top:0;width:19px;height:15px;border:2px solid #51417d;border-radius:6px;background:rgba(185,234,255,.28);box-sizing:border[...]
+.sunny-accessory.glasses-accessory:after{content:"";position:absolute;right:0;top:0;width:19px;height:15px;border:2px solid #51417d;border-radius:6px;background:rgba(185,234,255,.28);box-sizing:border[...]
+.sunny-face.has-glasses .eye{z-index:2}
+
+.eye{position:absolute;width:6px;height:9px;border-radius:50%;background:var(--ink);top:23px}.eye.left{left:20px}.eye.right{right:20px}
+.smile{position:absolute;left:20px;top:29px;width:27px;height:16px;border-bottom:3px solid var(--ink);border-radius:0 0 18px 18px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes sunnyWave{0%,100%{transform:rotate(0deg)}20%{transform:rotate(18deg)}40%{transform:rotate(-10deg)}60%{transform:rotate(18deg)}80%{transform:rotate(-5deg)}}
+@keyframes sunnyWaveFade{0%{opacity:0;transform:rotate(0deg) scale(.05) translateY(5px)}3%{opacity:1;transform:rotate(0deg) scale(1) translateY(0)}7%{transform:rotate(18deg) scale(1)}11%{transform:rot[...]
+.sidebar .sunny-face.welcome-wave::after{content:"👋";position:absolute;left:-35px;top:-19px;font-size:2.45rem;transform-origin:bottom right;animation:sunnyWaveFade 6.5s ease-in-out forwards;z-index[...]
+.sidebar .sunny-face.welcome-wave{transition:filter .45s ease;filter:drop-shadow(0 3px 5px #ffd45c55)}
+.welcome-back-note{padding:12px 14px;border-radius:16px;background:linear-gradient(120deg,#fff5c9,#ffe7f4);border:1px solid #ffe0a3;color:#6d4b80;font-weight:800;margin:0 0 14px}
+
+.sunny-title{text-align:center;font-weight:900;color:var(--purple)}
+#buddyText{font-size:.9rem;text-align:center;line-height:1.45;color:var(--muted);min-height:42px;margin:7px 2px 20px}
+.small-label{font-size:.68rem;font-weight:900;color:#858ba1;letter-spacing:.12em;margin:16px 9px 7px;text-transform:uppercase}.nav-group{margin:0 0 8px}.nav-group-title{font-size:.68rem;font-weight:90[...]
+.nav{width:100%;text-align:left;border:0;border-radius:13px;padding:12px;margin:4px 0;background:#f5f3ff;color:var(--ink);font-weight:800;font-size:.95rem;cursor:pointer}
+.nav:hover,.nav.active{background:#e7e2ff;outline:2px solid #d4cbff}
+.main{padding:clamp(24px,3vw,42px);min-height:500px}
+h1{font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.15;margin:4px 0 12px}h2{font-size:1.3rem}p{line-height:1.65}.muted{color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px}
+.card{border:1px solid var(--line);border-radius:17px;padding:16px;background:#fbfbff}.card strong{display:block;margin-bottom:5px}
+.btn{border:0;border-radius:13px;padding:12px 17px;background:var(--purple);color:white;font:inherit;font-weight:900;cursor:pointer;margin:8px 6px 0 0}
+.btn.secondary{background:#eeeaff;color:#4938a6}.btn.green{background:var(--green)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.quiz{margin-top:20px;padding:18px;background:#f8f7ff;border-radius:17px}
+.option{display:flex;align-items:flex-start;gap:10px;background:white;border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;cursor:pointer}
+.option:hover{border-color:#b8aaff}.option input{margin-top:4px;accent-color:var(--purple)}
+.feedback{font-weight:800;min-height:28px;margin-top:12px}.pill{display:inline-block;background:#e7f8f0;color:#167454;border-radius:999px;padding:6px 10px;font-size:.8rem;font-weight:900}
+input[type=text]{width:100%;max-width:360px;padding:12px;border:1px solid var(--line);border-radius:12px;font:inherit}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:.82rem}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#fff0c2;font-weight:900;font-size:.8rem}
+.progress{height:10px;background:#eeeaff;border-radius:99px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;background:linear-gradient(90deg,#7b61ff,#ff91c8);width:0;transition:[...]
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:0 18px 24px}
+@media(max-width:680px){.layout{grid-template-columns:1fr}.sidebar{padding:13px;position:static;max-height:none;overflow:visible}.sunny-face{margin-top:2px}.sidebar #buddyText{min-height:0;margin-bott[...]
+@media(min-width:1200px){.cards{gap:16px}.card{padding:20px}.quiz{padding:22px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#loginScreen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:16px;background:linear-gradient(135deg,#f3f7ffef,#fff0f8f2);backdrop-fil[...]
+.login-card{width:min(100%,460px);max-height:calc(100dvh - 32px);overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:28px;padding:clamp(18px,5vw,36px);text-align:center;box-shad[...]
+@media(max-width:520px){#loginScreen{align-items:flex-start;padding:10px}.login-card{width:100%;max-height:calc(100dvh - 20px);padding:18px 16px;border-radius:22px}.login-card .sunny-face{width:66px;h[...]
+@media(max-height:650px){#loginScreen{align-items:flex-start;padding-top:8px;padding-bottom:8px}.login-card{max-height:calc(100dvh - 16px);padding-top:14px;padding-bottom:14px}.login-card .sunny-face{[...]
+.login-card .sunny-face{width:86px;height:86px;margin-bottom:16px}
+.login-card .eye{top:28px}.login-card .eye.left{left:25px}.login-card .eye.right{right:25px}.login-card .smile{left:25px;top:35px;width:31px;height:18px}
+.login-card input{display:block;margin:14px auto;max-width:100%;text-align:center}
+.login-error{color:#b42318;font-weight:800;min-height:22px;font-size:.9rem}
+body.login-open{overflow:hidden}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.language-select{border:1px solid var(--line);border-radius:999px;padding:10px 12px;background:#fff;color:var(--ink);font:inherit[...]
+.shop-shortcut{border:0;border-radius:999px;padding:10px 14px;background:#ffdfef;color:#7d285b;font:inherit;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #eab2d0}
+.shop-shortcut:hover{filter:brightness(.97);transform:translateY(-1px)}
+.sidebar-settings-wrap{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.sidebar-settings-button{display:flex;align-items:center;gap:11px;width:100%;min-height:58px;padding:11px 12px;border:2px solid #bfe7f7;border-radius:16px;background:linear-gradient(135deg,#eaf8ff,#f4[...]
+.sidebar-settings-button>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:2px}.sidebar-settings-button strong{font-size:.98rem}.sidebar-settings-button small{font-size:.76rem;color:#607[...]
+.settings-shortcut{border:0;border-radius:999px;padding:10px 13px;background:#e9f7ff;color:#245c7a;font:inherit;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #c5e7f5}.settings-shortcut:hover{filte[...]
+#soundSettings{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:16px;background:#27314a66;backdrop-filter:blur(4px)}#soundSettings.open{display:flex}.[...]
+/* Accessibility preferences */
+html{font-size:100%}body{transition:background .2s,color .2s}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #1687d9;outline-offset:3px}
+#soundSettings .settings-card{max-height:min(88dvh,760px);overflow-y:auto}
+body.dark-mode{--bg:#111827;--card:#1f2937;--ink:#f3f4f6;--muted:#c0cad8;--line:#455166;--pink:#38283c;background:linear-gradient(135deg,#111827,#211a2a);color:var(--ink)}
+body.dark-mode .panel,body.dark-mode .settings-card,body.dark-mode .login-card{background:#1f2937;color:var(--ink);border-color:var(--line)}
+body.dark-mode .nav,body.dark-mode .nav-tools .nav{background:#293448;color:var(--ink);border-color:#455166}
+body.dark-mode .nav:hover,body.dark-mode .nav.active{background:#40376b;color:#fff}
+body.dark-mode .card,body.dark-mode .quiz,body.dark-mode .option,body.dark-mode .word-chip,body.dark-mode .level-option,body.dark-mode .path-option{background:#293448;color:var(--ink);border-color:#45[...]
+body.dark-mode input,body.dark-mode select,body.dark-mode textarea{background:#293448;color:var(--ink);border-color:#59677d}
+body.dark-mode .stats{background:#38305d;color:#fff}body.dark-mode .btn.secondary{background:#39315d;color:#f5f2ff}
+body.dark-mode .sidebar-settings-button{background:linear-gradient(135deg,#253b4c,#332b4b);color:#e5f5ff;border-color:#4a6178}
+body.high-contrast{--ink:#101010;--muted:#303030;--line:#555;--purple:#4b2acb;--green:#087449}
+body.dark-mode.high-contrast{--ink:#fff;--muted:#f0f0f0;--line:#fff;--purple:#c2b5ff;--green:#5be0aa}
+body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:16px}
+.shop-item{border:1px solid var(--line);border-radius:17px;padding:15px;background:var(--card)}
+.shop-preview{height:58px;border-radius:12px;margin-bottom:10px;border:2px solid #ffffffaa}
+.shop-item p{margin:7px 0;font-size:.9rem}
+/* Style shop: easy-to-tap rectangular action buttons and color swatches */
+.shop-item .btn{display:block;width:100%;box-sizing:border-box;margin:10px 0 0;border-radius:10px;min-height:44px}
+.shop-item .owned{display:block;text-align:center;border-radius:10px;padding:10px 8px}
+.shop-face-preview{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;height:62px;box-sizing:border-box;border:2px solid #ffffffaa;border-radius:12px!important;margin:0 auto 10p[...]
+.shop-preview{border-radius:12px}
+.path-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:14px 0 20px}.path-option{display:flex;align-items:flex-start;gap:9px;padding:13px;border:1px solid var([...]
+@media(max-width:680px){header{align-items:flex-start}.header-actions{width:100%;justify-content:space-between}.shop-shortcut{padding:10px 12px}.settings-shortcut{padding:10px 12px}}
+
+/* Surprise unboxing welcome scene */
+#giftScreen{position:fixed;inset:0;z-index:1100;display:none;align-items:center;justify-content:center;overflow:auto;padding:18px;background:linear-gradient(135deg,#f3f7ff,#fff0f8);text-align:center}
+.gift-card{width:min(100%,520px);padding:clamp(20px,5vw,36px);border:1px solid #e2e7f2;border-radius:28px;background:#fff;box-shadow:0 18px 60px #35466b22}
+.gift-stage{height:230px;position:relative;display:flex;align-items:flex-end;justify-content:center;margin:8px auto 12px;max-width:320px;overflow:hidden}
+.gift-box{position:absolute;left:50%;margin-left:-75px;bottom:16px;width:150px;height:105px;border-radius:10px;background:linear-gradient(135deg,#d99a5b,#bd7a3d);border:4px solid #a86631;box-shadow:0 [...]
+.gift-box:before{content:"";position:absolute;left:57px;top:-4px;width:27px;height:105px;background:#ffd45c;border-left:2px solid #f0b938;border-right:2px solid #f0b938}
+.gift-lid{position:absolute;left:-12px;top:-20px;width:166px;height:27px;border-radius:8px;background:#e8b77f;border:4px solid #a86631;transform-origin:10px 24px;transition:transform .65s cubic-bezier[...]
+.gift-lid:before{content:"🎀";position:absolute;left:62px;top:-23px;font-size:30px}
+.gift-sunny{position:absolute;left:50%;margin-left:-43px;bottom:70px;width:86px;height:86px;border-radius:50%;background:#ffd45c;border:4px solid #f0b938;box-shadow:0 5px 0 #f0b93855;z-index:2;transfo[...]
+.gift-sunny .eye{top:28px}.gift-sunny .eye.left{left:25px}.gift-sunny .eye.right{right:25px}.gift-sunny .smile{left:25px;top:35px;width:31px;height:18px}
+#giftScreen.opened .gift-lid{transform:translate(-55px,-100px) rotate(-35deg)}
+#giftScreen.opened .gift-sunny{animation:sunnyPop .9s cubic-bezier(.18,.85,.32,1.35) forwards}
+#giftScreen.opened .gift-box{animation:boxBounce .45s ease .2s}
+@keyframes sunnyPop{0%{transform:translateY(125px) scale(.65);opacity:0}65%{transform:translateY(-30px) scale(1.08);opacity:1}82%{transform:translateY(-15px) scale(.96)}100%{transform:translateY(-20px[...]
+@keyframes boxBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(7px)}70%{transform:translateY(-3px)}}
+.gift-sparkles{position:absolute;inset:0;pointer-events:none;font-size:24px;opacity:0}
+#giftScreen.opened .gift-sparkles{animation:sparklePop 1s ease .15s forwards}
+@keyframes sparklePop{0%{opacity:0;transform:scale(.5)}45%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.5)}}
+@media(prefers-reduced-motion:reduce){.gift-lid,.gift-box,.gift-sunny,.gift-sparkles{animation:none!important;transition:none!important}#giftScreen.opened .gift-sunny{transform:translateY(-20px);opaci[...]
+
+
+/* Sunny loading screen */
+#sunnyLoading{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;background:linear-gradient(135deg[...]
+#sunnyLoading.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+#sunnyLoading .loading-face{width:104px;height:104px;border-radius:50%;background:var(--sunny-loading-color,#ffd45c);border:4px solid #f0b938;position:relative;box-shadow:0 8px 0 #f0b93844;animation:l[...]
+#sunnyLoading .loading-eye{position:absolute;top:32px;width:8px;height:12px;border-radius:50%;background:#23304a}
+#sunnyLoading .loading-eye.left{left:28px}#sunnyLoading .loading-eye.right{right:28px}
+#sunnyLoading .loading-smile{position:absolute;left:27px;top:39px;width:43px;height:25px;border-bottom:4px solid #23304a;border-radius:0 0 28px 28px}
+#sunnyLoading h1{color:#7b61ff;margin:0;font-size:clamp(1.7rem,6vw,2.4rem)}#sunnyLoading p{color:#66718a;margin:0}
+#sunnyLoading .loading-track{width:min(260px,75vw);height:10px;border-radius:99px;background:#e7e2ff;overflow:hidden}
+#sunnyLoading .loading-bar{height:100%;width:35%;border-radius:99px;background:linear-gradient(90deg,#7b61ff,#ff91c8);animation:loadingProgress 1.25s ease-in-out infinite}
+@keyframes loadingBounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+@keyframes loadingProgress{0%{transform:translateX(-110%)}100%{transform:translateX(330%)}}
+@media(prefers-reduced-motion:reduce){#sunnyLoading .loading-face,#sunnyLoading .loading-bar{animation:none}#sunnyLoading .loading-bar{width:100%}}
+
+
+.science-nav-toggle{display:flex;align-items:center;gap:8px;width:100%;text-align:left}
+.science-nav-toggle .science-arrow{margin-left:auto;transition:transform .2s ease;font-size:.85rem}
+.science-nav-toggle[aria-expanded="true"] .science-arrow{transform:rotate(90deg)}
+.science-subnav{padding-left:16px;margin:4px 0 7px 12px;border-left:2px solid var(--line);display:grid;gap:4px}
+.science-subnav[hidden]{display:none}
+.science-subnav .nav{font-size:.94rem;padding-top:9px;padding-bottom:9px}
+@media(prefers-reduced-motion:reduce){.science-nav-toggle .science-arrow{transition:none}}
+
+
+.practice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:16px 0}
+.practice-card{border:1px solid var(--line);background:#fcfbff;border-radius:18px;padding:15px;min-width:0}
+.practice-card h3{margin:3px 0 8px}.practice-card p{margin:6px 0 10px}.word-bank{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.word-chip{border:1px solid #d8d0ff;background:#fff;border-radius:999[...]
+@media(max-width:650px){.practice-grid{grid-template-columns:1fr}}
+
+
+/* Sunny Study Upload Lab */
+.study-upload-card{background:linear-gradient(135deg,#fff,#fbf8ff);border:1px solid #e7defe;border-radius:22px;padding:clamp(16px,3vw,24px);box-shadow:0 10px 30px #5945a10c}
+.study-drop{display:block;border:2px dashed #b7a8ff;background:#f8f5ff;border-radius:18px;padding:24px 16px;text-align:center;cursor:pointer;margin:14px 0;color:#4f3cb4;font-weight:850}
+.study-drop input{display:block;max-width:100%;margin:12px auto 0;color:var(--ink);font-weight:600}
+.study-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.study-actions button{border:0;border-radius:12px;padding:10px 14px;background:#7b61ff;color:white;font-weight:850;cursor:pointer}.stud[...]
+.study-result{white-space:pre-wrap;line-height:1.65;background:white;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;overflow-wrap:anywhere}
+.study-result h3{margin-top:0}.study-note{font-size:.86rem;color:var(--muted)}.study-status{font-weight:800;color:#4f3cb4;min-height:24px}
+
+
+.feedback-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
+.feedback-post{background:linear-gradient(145deg,#fff9d9,#fff1f6);border:1px solid #f0dfb0;border-radius:17px;padding:15px;box-shadow:0 5px 14px #5c4b1810;min-height:145px;position:relative;overflow-w[...]
+.feedback-post:nth-child(3n+2){background:linear-gradient(145deg,#eaf8ff,#f3edff);border-color:#d8e6f5}
+.feedback-post:nth-child(3n){background:linear-gradient(145deg,#eafff1,#f4f0ff);border-color:#d7ebdf}
+.feedback-post h3{margin:0 0 7px;font-size:1rem}.feedback-post p{white-space:pre-wrap;margin:8px 0 13px;line-height:1.45}
+.feedback-meta{font-size:.78rem;color:#697087;font-weight:750;display:flex;gap:8px;flex-wrap:wrap}
+.feedback-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.feedback-reaction{border:1px solid #ded8f0;border-radius:20px;background:#fff;padding:6px 10px;cursor:pointer;font:inherit;font-size:.85rem}
+.feedback-form{display:grid;gap:10px;margin-top:16px}.feedback-form input,.feedback-form textarea,.feedback-form select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;bac[...]
+.feedback-form textarea{min-height:100px;resize:vertical}
+body.dark-mode .feedback-post{background:#303b50;border-color:#59677d;color:var(--ink)}
+body.dark-mode .feedback-meta{color:#c0cad8}
+@media(max-width:680px){.feedback-wall{grid-template-columns:1fr}}
+
+.feedback-customize{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.feedback-customize label,.feedback-gif-label{display:grid;gap:6px;font-weight:700;font-size:.9rem}
+.feedback-customize input[type=color]{width:100%;height:42px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.feedback-customize select,.feedback-gif-label input{width:100%;min-width:0;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+.feedback-gif-preview img{max-width:100%;max-height:180px;border-radius:12px;display:block;margin-top:8px}
+.feedback-post .feedback-post-gif{display:block;max-width:100%;max-height:210px;border-radius:12px;margin:10px 0}
+
+/* Sunny global calculator: stays beneath loading/login overlays */
+#sunnyCalcFab{position:fixed;right:18px;bottom:18px;z-index:900;border:0;border-radius:999px;padding:13px 17px;background:linear-gradient(135deg,#7b61ff,#a88cff);color:#fff;font:800 15px ui-rounded,"Trebuchet MS",system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 22px rgba(123,97,255,.35);letter-spacing:.02em}
+#sunnyCalcFab:focus-visible,#sunnyCalcClose:focus-visible,#sunnyCalcPanel button:focus-visible{outline:3px solid #ffd45c;outline-offset:3px}
+#sunnyCalcOverlay{position:fixed;inset:0;z-index:950;background:#18213b66;display:none;align-items:center;justify-content:center;padding:16px}
+#sunnyCalcOverlay.open{display:flex}
+#sunnyCalcPanel{width:min(100%,390px);background:var(--card,#fff);color:var(--ink,#23304a);border:1px solid var(--line,#e2e7f2);border-radius:24px;padding:18px;box-shadow:0 20px 70px #17213b44}
+.sunny-calc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sunny-calc-head h2{font-size:1.2rem;margin:0}
+#sunnyCalcClose{width:40px;height:40px;border:0;border-radius:12px;background:#f2efff;color:#5140a4;font-size:1.35rem;font-weight:900;cursor:pointer}
+#sunnyCalcDisplay{width:100%;min-height:68px;border:2px solid #ded8ff;border-radius:16px;background:#faf9ff;padding:12px 14px;text-align:right;font-size:1.75rem;font-weight:850;color:#34265f;overflow-[...]
+.sunny-calc-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.sunny-calc-grid button{min-height:52px;border:1px solid #e7e2f5;border-radius:14px;background:#f7f5ff;color:#30294a;font:800 1.05rem ui-rounded,"Trebuchet MS",system-ui,sans-serif;cursor:pointer}
+.sunny-calc-grid button.op{background:#eeeaff;color:#5946bd}
+.sunny-calc-grid button.equals{background:#7b61ff;color:#fff}
+.sunny-calc-grid button.clear{background:#fff0f6;color:#a33b70}
+.sunny-calc-hint{font-size:.78rem;color:var(--muted,#66718a);margin:10px 2px 0}
+@media(max-width:420px){#sunnyCalcFab{right:12px;bottom:12px;padding:12px 14px}#sunnyCalcPanel{padding:14px}.sunny-calc-grid{gap:6px}.sunny-calc-grid button{min-height:50px}}
+
+
+#sunnyCalcTabs{display:flex;gap:7px;margin:0 0 12px}
+#sunnyCalcTabs button{flex:1;border:1px solid #ded8ff;border-radius:12px;padding:10px 5px;background:#f7f5ff;color:#5146a4;font-weight:800;cursor:pointer}
+#sunnyCalcTabs button.active{background:#7b61ff;color:#fff}
+.sunny-calc-mode{display:none}.sunny-calc-mode.active{display:block}
+#sunnySciKeys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+#sunnySciKeys button{min-height:43px;border:1px solid #e7e2f5;border-radius:12px;background:#f7f5ff;color:#30294a;font-weight:800;cursor:pointer}
+#sunnySciKeys button.op{background:#eeeaff;color:#5946bd}
+#sunnyGraphInput{width:100%;box-sizing:border-box;padding:11px;border:2px solid #ded8ff;border-radius:12px;font:inherit;margin:6px 0}
+#sunnyGraphCanvas{width:100%;height:230px;display:block;background:#fff;border:1px solid #e7e2f5;border-radius:12px;touch-action:pan-y}
+#sunnyGraphMode button.graph-action{border:0;border-radius:11px;background:#7b61ff;color:white;padding:10px 14px;font-weight:800}
+#sunnyGraphRange{width:100%}
+
+
+/* Mobile-first refinements for phones and tablets */
+html{width:100%;min-width:0;overflow-x:hidden;-webkit-text-size-adjust:100%}
+body{width:100%;min-width:0;overflow-x:hidden}
+button,input,textarea,select{font:inherit}
+img,canvas,video,iframe{max-width:100%}
+#sunnyCalcOverlay{padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom))}
+#sunnyCalcPanel{min-width:0;max-width:100%;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#sunnyGraphCanvas{width:100%;height:auto;aspect-ratio:5/3;max-height:38dvh;touch-action:pan-y}
+#sunnyGraphInput{min-width:0;font-size:16px}
+#sunnyCalcTabs button,#sunnySciKeys button,#sunnyCalcKeys button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media(max-width:680px){
+  header{padding:16px 14px 10px;gap:10px}
+  .layout{padding:8px 12px 24px;gap:12px}
+  .main{min-width:0;width:100%;overflow-wrap:anywhere}
+  .sidebar{min-width:0;width:100%}
+  .cards{grid-template-columns:minmax(0,1fr)}
+  .header-actions{flex-wrap:wrap;gap:8px}
+  #sunnyCalcFab{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));min-height:48px;padding:11px 14px;font-size:14px}
+  #sunnyCalcOverlay{align-items:flex-end;padding:0; padding-top:env(safe-area-inset-top)}
+  #sunnyCalcPanel{
+    width:100%;max-width:none;max-height: min(92dvh, 850px);
+    border-radius:22px 22px 0 0;
+    padding:14px 14px calc(14px + env(safe-area-inset-bottom));
+    border-bottom:0;
+  }
+  .sunny-calc-head{position:sticky;top:-14px;z-index:2;background:var(--card,#fff);padding:8px 0 10px;margin:0 0 8px}
+  .sunny-calc-head h2{font-size:1.05rem}
+  #sunnyCalcTabs{position:sticky;top:43px;z-index:2;background:var(--card,#fff);padding:5px 0 9px;gap:5px}
+  #sunnyCalcTabs button{min-width:0;padding:10px 3px;font-size:clamp(12px,3.5vw,14px);white-space:nowrap}
+  .sunny-calc-grid{gap:7px}
+  .sunny-calc-grid button{min-height:54px;font-size:1rem}
+  #sunnySciKeys{gap:6px}
+  #sunnySciKeys button{min-height:46px;padding:6px 2px;font-size:clamp(12px,3.7vw,15px)}
+  #sunnyGraphMode .sunny-calc-hint{font-size:12px;line-height:1.4}
+  #sunnyGraphPlot{min-height:44px}
+}
+@media(max-width:380px){
+  #sunnyCalcPanel{padding-left:10px;padding-right:10px}
+  #sunnyCalcTabs{gap:4px}
+  #sunnyCalcTabs button{font-size:11px;padding:9px 2px}
+  #sunnySciKeys{gap:5px}
+  #sunnySciKeys button{min-height:44px;font-size:12px}
+  .sunny-calc-grid button{min-height:50px}
+}
+@media(max-height:600px) and (max-width:900px){
+  #sunnyCalcPanel{max-height:96dvh}
+  #sunnyGraphCanvas{max-height:28dvh}
+  .sunny-calc-head{padding-top:4px;padding-bottom:5px}
+}
+@supports not (height:100dvh){
+  #sunnyCalcPanel{max-height:calc(100vh - 24px)}
+  @media(max-width:680px){#sunnyCalcPanel{max-height:92vh}}
+}
+
+</style>
+</head>
+<body>
+
+<div id="sunnyLoading" role="status" aria-live="polite" aria-label="Sunny Learning Buddy is loading">
+  <div class="loading-face" aria-hidden="true"><span class="loading-eye left"></span><span class="loading-eye right"></span><span class="loading-smile"></span></div>
+  <h1>Sunny is getting ready! ✨</h1>
+  <p>Warming up your learning adventure…</p>
+  <div class="loading-track" aria-hidden="true"><div class="loading-bar"></div></div>
+  <span style="font-weight:800;color:#7b61ff;font-size:.9rem">📚 Learn · Play · Level up!</span>
+</div>
+<script>window.setTimeout(()=>{const screen=document.getElementById('sunnyLoading');if(screen){screen.classList.add('is-hidden');window.setTimeout(()=>screen.remove(),500)}},1800);</script>
+
+<div id="loginScreen">
+  <form class="login-card" id="loginForm">
+    <div class="sunny-face" role="img" aria-label="Smiley Sunny companion"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+    <label for="loginLanguage" class="muted" style="display:block;margin:0 0 8px">🌐 Language / Idioma</label><select id="loginLanguage" class="language-select" aria-label="Choose language"><option [..]
+    <p class="muted">Before we start, choose your username. Your points and level will be saved under your name!</p>
+    <label for="loginName"><b>👤 Your username</b></label>
+    <input id="loginName" type="text" maxlength="20" placeholder="e.g. StarLearner" autocomplete="nickname" required>
+    <button class="btn secondary" id="randomName" type="button">🎲 Make me a random username!</button>
+    <div class="login-error" id="loginError" role="alert"></div>
+    <button class="btn green" type="submit">Start Learning 🚀</button>
+    <p class="muted" style="font-size:.82rem;margin-bottom:0">Scores are saved in this browser on this device.</p>
+  </form>
+</div>
+<div id="giftScreen" aria-live="polite">
+  <section class="gift-card">
+    <h1 id="giftTitle">A surprise for you! 🎁</h1>
+    <p class="muted" id="giftMessage">Your new learning buddy is waiting inside...</p>
+    <div class="gift-stage" aria-label="A pink present with Sunny inside">
+      <div class="gift-sparkles">✨ ⭐ 💖 ✨ 🌟</div>
+      <div class="gift-sunny sunny-face" role="img" aria-label="Sunny popping out of a gift"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+      <button class="gift-box" id="openGift" type="button" aria-label="Open the surprise gift"><span class="gift-lid"></span></button>
+    </div>
+    <button class="btn green" id="giftAction" type="button">🎁 Open your surprise!</button>
+  </section>
+</div>
+<header>
+  <div><span class="brand">☀ SUNNY</span><span class="tag">Your learning buddy</span></div>
+  <div class="header-actions"><label for="languageSelect" class="muted" style="font-weight:800">🌐</label><select id="languageSelect" class="language-select" aria-label="Choose language"><option val[...]
+</header>
+<div class="layout">
+  <aside class="panel sidebar">
+    <div class="sunny-face" role="img" aria-label="Smiley Sunny companion"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+    <div class="sunny-title">Sunny says:</div>
+    <div id="buddyText">You're ready to learn! 🌟</div>
+    <div class="small-label">YOUR LEARNING SPACE</div>
+    <nav id="nav" aria-label="Learning subjects"></nav>
+    <div class="nav-tools"><div class="nav-group-title">Play & progress</div>
+      <button class="nav" id="mathGameNav" type="button">🎮 <span>Math Mini-Game</span></button>
+      <button class="nav" id="studyUploadNav" type="button">📚 <span>Upload & Study</span></button>
+      <button class="nav" id="scienceGameNav" type="button">🧪 <span>Science Mini-Game</span></button>
+      <button class="nav" id="achievementsNav" type="button">🏅 <span>Achievements</span></button>
+      <button class="nav" id="keyShopNav" type="button">🗝️ <span>Key Shop</span></button>
+      <button class="nav" id="leaderNav">🏆 <span>High-score board</span></button>
+      <button class="nav" id="feedbackNav" type="button">💌 <span>Feedback Wall</span></button>
+    </div>
+    <div class="sidebar-settings-wrap">
+      <button class="sidebar-settings-button" id="sidebarSettingsShortcut" type="button" aria-label="Open sound settings">⚙️ <span><strong>Settings</strong><small>Music &amp; button sounds</small></span></button>
+    </div>
+  </aside>
+  <main class="panel main" id="content" aria-live="polite"></main>
+</div>
+<div id="soundSettings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <section class="settings-card">
+    <h2 id="settingsTitle">⚙️ Sunny's Settings Studio</h2>
+    <p class="muted" style="margin-top:5px">Make Sunny comfy for your eyes, ears, and learning style! 💖</p>
+    <h3 style="margin:18px 0 2px">♿ Accessibility</h3>
+    <div class="setting-row"><div><label for="textScale">🔎 Text size</label><small id="textScaleLabel">100% · Default</small></div><input id="textScale" type="range" min="90" max="150" step="10" value="100"></div>
+    <div class="setting-row"><div><label for="darkMode">🌙 Dark mode</label><small>Use a darker colour theme</small></div><input id="darkMode" type="checkbox"></div>
+    <div class="setting-row"><div><label for="highContrast">◐ High contrast</label><small>Make text and borders easier to distinguish</small></div><input id="highContrast" type="checkbox"></div>
+    <div class="setting-row"><div><label for="reduceMotion">🫧 Reduce animations</label><small>Turn off bouncing and motion effects</small></div><input id="reduceMotion" type="checkbox"></div>
+    <h3 style="margin:18px 0 2px">🎵 Music & sounds</h3>
+    <div class="setting-row"><div><label for="musicTrack">🎼 Music style</label><small>Choose your favourite background tune</small></div><select id="musicTrack" class="language-select" aria-label="Select music track"><option value="sparkle">Sparkle</option><option value="calm">Calm</option><option value="piano">Piano</option><option value="musicbox">Music Box</option></select></div>
+    <div class="setting-row"><div><label for="musicEnabled">🎶 Sweet background music</label><small>Soft, cheerful looping melody</small></div><input id="musicEnabled" type="checkbox" checked></div>
+    <div class="setting-row" id="musicVolumeRow"><div><label for="musicVolume">Music volume</label><small id="musicVolumeLabel">25%</small></div><input id="musicVolume" type="range" min="0" max="100" value="25"></div>
+    <div class="setting-row"><div><label for="soundsEnabled">✨ Button sounds</label><small>Gentle pops when you tap buttons</small></div><input id="soundsEnabled" type="checkbox" checked></div>
+    <div class="setting-row" id="soundVolumeRow"><div><label for="soundVolume">Button volume</label><small id="soundVolumeLabel">35%</small></div><input id="soundVolume" type="range" min="0" max="100" value="35"></div>
+    <div class="settings-actions"><button class="btn secondary" id="previewSound" type="button">▶ Test sound</button><button class="btn" id="closeSettings" type="button">Done 💖</button></div>
+  </section>
+</div>
+<footer>Made for curious minds 🌱 · Scores are saved only in this browser on this device.</footer>
+<script>
+// Sunny's tiny, original Web Audio sound system (no downloads or external audio files).
+const SunnyAudio = (() => {
+  const defaults={music:true,musicVolume:25,sounds:true,soundVolume:35,track:'sparkle'};
+  let prefs={...defaults};
+  try{prefs={...prefs,...JSON.parse(localStorage.getItem('sunnySoundPrefs')||'{}')}}catch(e){}
+  let ctx=null, musicTimer=null, noteIndex=0, master=null;
+  const tracks={sparkle:[523.25,659.25,783.99,659.25,587.33,698.46,783.99,698.46,523.25,587.33,659.25,523.25,440,523.25,659.25,587.33],calm:[392,440,523.25,440,349.23,392,440,392,329.63,392,440,523.25,440,392,330,293.66],piano:[261.63,329.63,392,329.63,293.66,349.23,440,349.23,392,523.25,587.33,523.25,440,392,329.63,293.66],musicbox:[659.25,587.33,698.46,783.99,659.25,587.33,523.25,659.25,698.46,783.99,659.25,587.33,698.46,783.99]};
+  const melody=()=>tracks[prefs.track]||tracks.sparkle;
+  function audio(){if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC();master=ctx.createGain();master.gain.value=0.8;master.connect(ctx.destination)}if(ctx.state==='suspended')ctx.resume();return ctx}
+  function persist(){try{localStorage.setItem('sunnySoundPrefs',JSON.stringify(prefs))}catch(e){}}
+  function tone(freq,duration,volume,type='sine',when=0){const c=audio();if(!c)return;const osc=c.createOscillator(),gain=c.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,c.currentTime+when);gain.gain.setValueAtTime(0.0001,c.currentTime+when);gain.gain.exponentialRampToValueAtTime(volume,c.currentTime+when+0.02);gain.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+when+duration);osc.connect(gain);gain.connect(master);osc.start(c.currentTime+when);osc.stop(c.currentTime+when+duration+0.04)}
+  function tick(){if(!prefs.music||prefs.musicVolume<=0)return;const vol=(prefs.musicVolume/100)*.075;const notes=melody(),wave=prefs.track==='piano'?'triangle':prefs.track==='musicbox'?'sine':'sine';const next=notes[noteIndex%notes.length];tone(next,0.42,vol,wave);noteIndex++;}
+  function startMusic(){if(!prefs.music||prefs.musicVolume<=0||musicTimer)return;audio();tick();musicTimer=setInterval(tick,440)}
+  function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
+  function updateMusic(){stopMusic();if(prefs.music&&prefs.musicVolume>0)startMusic()}
+  function click(){if(!prefs.sounds||prefs.soundVolume<=0)return;const v=(prefs.soundVolume/100)*.16;tone(660,.075,v,'sine');tone(880,.09,v*.72,'sine',.045)}
+  function preview(){const old=prefs.sounds,vol=prefs.soundVolume;prefs.sounds=true;prefs.soundVolume=Math.max(25,vol);click();prefs.sounds=old;prefs.soundVolume=vol}
+  function set(key,value){prefs[key]=value;persist();if(key==='music'||key==='musicVolume')updateMusic();syncUI()}
+  function syncUI(){const m=document.getElementById('musicEnabled'),mv=document.getElementById('musicVolume'),b=document.getElementById('soundsEnabled'),bv=document.getElementById('soundVolume');if(!m||!mv||!b||!bv)return; m.checked=prefs.music; mv.value=prefs.musicVolume; bv.value=prefs.soundVolume; b.checked=prefs.sounds; document.getElementById('musicVolumeLabel').textContent=`${prefs.musicVolume}%`; document.getElementById('soundVolumeLabel').textContent=`${prefs.soundVolume}%`;}
+  function open(){document.getElementById('soundSettings').classList.add('open');syncUI()}
+  function close(){document.getElementById('soundSettings').classList.remove('open')}
+  document.addEventListener('pointerdown',()=>{if(prefs.music&&prefs.musicVolume>0)startMusic()},{once:true});
+  document.addEventListener('click',e=>{const btn=e.target.closest('button');if(btn&&!btn.disabled&&btn.id!=='previewSound'&&btn.id!=='settingsShortcut'&&btn.id!=='sidebarSettingsShortcut'&&btn.id!=='closeSettings'&&btn.id!=='giftAction'&&btn.id!=='openGift'){if(prefs.sounds&&prefs.soundVolume>0)click();}});
+  window.addEventListener('storage',()=>{});
+  return {set,open,close,preview,syncUI,startMusic};
+})();
+const lessons = {
+ "Maths":[
+  {title:"Fractions are parts!",body:"A fraction shows equal parts of a whole. In 1/2, the bottom number tells how many equal parts make the whole, and the top number tells how many parts we have.",q:"What is 1/2 of 8?",opts:["4","6","8"],a:0,why:"Half of 8 is 4."},
+  {title:"Times-table power",body:"Multiplication is a quick way to add equal groups. 3 × 4 means three groups of four: 4 + 4 + 4.",q:"What is 3 × 4?",opts:["7","12","16"],a:1,why:"Three groups of four make 12."},
+  {title:"Place value",body:"Each digit has a value based on its position. In 352, the 3 means 300, the 5 means 50, and the 2 means 2.",q:"What is the value of 6 in 462?",opts:["6","60","600"],a:1,why:"The 6 is in the tens place, so it is worth 60."},
+  {title:"Perimeter patrol",body:"Perimeter is the distance all the way around a shape. Add the lengths of every side to find it.",q:"A square has sides of 5 cm. What is its perimeter?",opts:["10 cm","15 cm","20 cm"],a:2,why:"A square has 4 equal sides: 5 + 5 + 5 + 5 = 20 cm."},
+  {title:"Even or odd?",body:"Even numbers can be divided by 2 with no remainder. Odd numbers leave a remainder of 1 when divided by 2.",q:"Which number is even?",opts:["13","21","28"],a:2,why:"28 divides by 2 exactly."},
+  {title:"Fractions add up",body:"When the denominators are the same, add the numerators and keep the denominator.",q:"What is 1/5 + 2/5?",opts:["3/5","3/10","2/5"],a:0,why:"1 fifth + 2 fifths = 3 fifths."},
+  {title:"Find x: balanced seesaw",body:"A seesaw is in equilibrium when the clockwise moment equals the anticlockwise moment. Moment = force × distance from the pivot. A 20 N force acts 2 m to the left and 10 N acts x m to the right. ",q:"Solve 20 × 2 = 10 × x",opts:["2","4","8"],a:1,why:"40 = 10x, so x = 4."},
+  {title:"Solve the balance equation",body:"Use equal moments on a balanced seesaw. If 30 N acts x metres from the pivot and 15 N acts 4 m on the other side, then 30x = 15 × 4.",q:"Solve 30x = 15 × 4.",opts:["x = 2","x = 4","x = 6"],a:0,why:"15 × 4 = 60, and 30 × 2 = 60."},
+  {title:"Algebra: find the missing distance",body:"To find x, undo multiplication by dividing both sides by the force. For example, if 12x = 36, then x = 36 ÷ 12.",q:"Solve 12x = 36.",opts:["2","3","4"],a:1,why:"36 ÷ 12 = 3."}
+ ],
+ "Science":[
+  {title:"Plants make their own food",body:"Plants use sunlight, water, and carbon dioxide to make sugar in photosynthesis. Chlorophyll helps capture light.",q:"What source of energy helps plants photosynthesise?",opts:["Sunlight","Soil","Oxygen"],a:0,why:"Sunlight provides the energy for photosynthesis."},
+  {title:"States of matter",body:"Solids keep their shape, liquids flow, and gases spread out to fill the space available.",q:"Which state of matter usually fills its container?",opts:["Solid","Liquid","Gas"],a:2,why:"Gas spreads out and fills the space available."},
+  {title:"Forces can change motion",body:"A force is a push or pull. Forces can change an object's speed, direction, or shape.",q:"Which is an example of a force?",opts:["A push on a door","The colour of a wall","The smell of flowers"],a:0,why:"A push is a force."},
+  {title:"The water cycle",body:"Water evaporates, cools and condenses into clouds, then may fall as precipitation such as rain or snow.",q:"What is the process called when liquid water becomes water vapour?",opts:["Condensation","Evaporation","Freezing"],a:1,why:"Evaporation turns liquid water into vapour."},
+  {title:"Food chains",body:"A food chain shows how energy passes between living things. Plants often begin a chain because they make their own food.",q:"Which organism is a producer?",opts:["Grass","Fox","Hawk"],a:0,why:"Plants are producers because they make their own food."},
+  {title:"The human heart",body:"The heart is a muscular organ that pumps blood around the body, delivering oxygen and nutrients.",q:"What does the heart do?",opts:["Pumps blood","Digests all food","Stores oxygen"],a:0,why:"The heart circulates blood around the body."}
+ ],
+ "Physics":[
+  {title:"Forces: pushes and pulls",body:"A force is a push or pull. Forces can speed up, slow down, change direction, or change an object's shape.",q:"Which action is an example of a force?",opts:["Pushing a toy car","Reading a book","Looking at the sky"],a:0,why:"Pushing a toy car is a force."},
+  {title:"Friction in action",body:"Friction is a force that acts when surfaces rub together. It can slow moving objects down.",q:"Which surface usually creates more friction for a rolling ball?",opts:["Smooth wood","Carpet","Ice"],a:1,why:"A rough surface such as carpet creates more friction."},
+  {title:"Light travels",body:"Light travels in straight lines through a uniform medium. We see objects when light from them reaches our eyes.",q:"Which object is a natural source of light?",opts:["The Sun","A candle","A torch"],a:0,why:"The Sun gives out natural light."},
+  {title:"Simple circuits",body:"A simple electric circuit needs a complete path. A cell or battery provides energy to move charge around the circuit.",q:"What must a circuit have for a bulb to light?",opts:["A complete loop","A switch off","A broken wire"],a:0,why:"A complete loop lets current flow."},
+  {title:"Seesaw equilibrium: find x",body:"A seesaw is a lever. It is balanced when the total clockwise moment equals the total anticlockwise moment. Moment = force × perpendicular distance from the pivot.",q:"A 30 N force is x m from the pivot and balances a 15 N force 4 m away. What is x?",opts:["2 m","4 m","6 m"],a:0,why:"30x = 15 × 4, so x = 2."},
+  {title:"Moments on a balanced lever",body:"For equilibrium, clockwise moments and anticlockwise moments are equal. Multiply each force by its distance from the pivot.",q:"A 40 N force is 2 m from the pivot. What is the moment?",opts:["20 N m","40 N m","80 N m"],a:2,why:"Moment = force × distance = 40 × 2 = 80 N m."}
+ ],
+ "Chemistry":[
+  {title:"Solids, liquids and gases",body:"In solids, particles stay close together in fixed positions. In liquids, particles can move past each other. In gases, particles spread out.",q:"Which state has particles spread far apart?",opts:["Solid","Liquid","Gas"],a:2,why:"Gas particles are far apart."},
+  {title:"Elements and compounds",body:"An element contains one type of atom. A compound contains two or more different elements chemically joined together.",q:"Which is an element?",opts:["Oxygen","Water","Salt"],a:0,why:"Oxygen is a pure element."},
+  {title:"Reversible changes",body:"Melting and freezing are physical changes. The substance stays the same even though its state changes.",q:"What happens when ice melts?",opts:["Solid water becomes liquid water","Liquid water becomes gas instantly","Ice becomes a new substance"],a:0,why:"Melting changes ice to liquid water."},
+  {title:"Acids and alkalis",body:"Acids and alkalis have different properties. Indicators, such as litmus, can help us tell them apart.",q:"What colour does blue litmus usually turn in an acid?",opts:["Blue","Red","Green"],a:1,why:"Acids turn blue litmus red."}
+ ],
+ "Biology":[
+  {title:"Cells: life's building blocks",body:"Living organisms are made of cells. Many cells have structures such as a membrane, cytoplasm and genetic material.",q:"Which structure surrounds the cell?",opts:["Cell membrane","Leaf","Flower"],a:0,why:"The cell membrane surrounds the cell."},
+  {title:"Photosynthesis",body:"Green plants use light energy to make glucose from carbon dioxide and water. Oxygen is released as a by-product.",q:"Which gas do plants take in for photosynthesis?",opts:["Oxygen","Carbon dioxide","Nitrogen"],a:1,why:"Plants take in carbon dioxide."},
+  {title:"Food chains",body:"A food chain shows how energy passes between organisms. Producers, such as plants, make their own food.",q:"What is usually a producer in a food chain?",opts:["Grass","A fox","A frog"],a:0,why:"Grass is a producer."},
+  {title:"The human heart",body:"The heart is a muscular organ that pumps blood through blood vessels, delivering oxygen and nutrients around the body.",q:"What is the main job of the heart?",opts:["To pump blood","To digest food","To filter air"],a:0,why:"The heart pumps blood."}
+ ],
+ "English":[
+  {title:"Adjectives add detail",body:"An adjective describes a noun. In 'the bright star', the word 'bright' describes the star.",q:"Which word is the adjective in 'The tiny bird sang'?",opts:["bird","tiny","sang"],a:1,why:"Tiny describes the bird."},
+  {title:"Nouns name things",body:"A noun names a person, place, thing, or idea.",q:"Which word is a noun?",opts:["quickly","garden","jump"],a:1,why:"A garden is a place, so it is a noun."},
+  {title:"Verbs show action",body:"A verb can show an action or a state of being.",q:"Which word is the verb in 'Birds fly high'?",opts:["Birds","fly","high"],a:1,why:"Fly tells us the action."},
+  {title:"Punctuation power",body:"A question mark goes at the end of a direct question.",q:"Which punctuation mark ends a question?",opts:[".","?","!"],a:1,why:"A question mark shows that a question is being asked."},
+  {title:"Synonym search",body:"Synonyms are words with the same or similar meanings.",q:"Which word is a synonym for 'happy'?",opts:["Joyful","Sleepy","Angry"],a:0,why:"Joyful has a similar meaning to happy."},
+  {title:"Prefixes",body:"A prefix is added to the beginning of a word to change its meaning. 'Un-' can mean not.",q:"What does 'unhappy' mean?",opts:["Very happy","Not happy","Happy again"],a:1,why:"Unhappy means not happy."}
+ ],
+ "French": [
+  {title:"Bonjour! Hello!",body:"Bonjour means hello or good day. Salut is an informal hello. Say bonjour when greeting someone politely.",q:"What does bonjour mean?",opts:["Goodbye","Hello / good day","Thanks"],a:1,why:"Bonjour means hello or good day."},
+  {title:"Merci beaucoup!",body:"Merci means thank you. Merci beaucoup means thank you very much. You can reply with de rien, meaning you're welcome.",q:"How do you say 'thank you' in French?",opts:["Au revoir","Merci","Bonjour"],a:1,why:"Merci means thank you."},
+  {title:"Au revoir!",body:"Au revoir means goodbye. À bientôt means see you soon. Use these phrases when ending a conversation.",q:"Which phrase means goodbye?",opts:["Bonjour","Au revoir","Merci"],a:1,why:"Au revoir means goodbye."},
+  {title:"Count to three",body:"French numbers: un (one), deux (two), trois (three), quatre (four), cinq (five). Practise saying them slowly.",q:"What is the French word for two?",opts:["Un","Deux","Trois"],a:1,why:"Deux means two."},
+  {title:"Colours in French",body:"Rouge means red, bleu means blue, vert means green, and jaune means yellow. Colour words can describe things around you.",q:"What does rouge mean?",opts:["Green","Yellow","Red"],a:2,why:"Rouge means red."},
+  {title:"Polite French",body:"S'il vous plaît means please (polite/formal). S'il te plaît is informal. Pardon can mean pardon or excuse me.",q:"Which phrase means 'please' politely?",opts:["S'il vous plaît","Au revoir","Merci"],a:0,why:"S'il vous plaît is polite please."}
+ ],
+ "Spanish":[
+  {title:"Hola! Hello!",body:"Hola means hello. Buenos días means good morning, buenas tardes means good afternoon, and buenas noches means good evening or good night.",q:"Which phrase means good morning?",opts:["Buenos días","Gracias","Adiós"],a:0,why:"Buenos días means good morning."},
+  {title:"Gracias! Thank you!",body:"Gracias means thank you. Muchas gracias means thank you very much. De nada means you're welcome.",q:"How do you say thank you in Spanish?",opts:["Por favor","Gracias","Adiós"],a:1,why:"Gracias means thank you."},
+  {title:"Por favor",body:"Por favor means please. Perdón can mean pardon or excuse me. These polite phrases help in everyday conversations.",q:"Which phrase means please?",opts:["Por favor","Adiós","Hola"],a:0,why:"Por favor means please."},
+  {title:"Adiós! Goodbye!",body:"Adiós means goodbye. Hasta luego means see you later, and hasta pronto means see you soon.",q:"Which phrase means see you later?",opts:["Hasta luego","Gracias","Buen día"],a:0,why:"Hasta luego means see you later."},
+  {title:"Count to five",body:"Spanish numbers: uno (one), dos (two), tres (three), cuatro (four), cinco (five). Say them slowly and repeat.",q:"What is the Spanish word for three?",opts:["Dos","Cinco","Tres"],a:2,why:"Tres means three."},
+  {title:"Colours in Spanish",body:"Rojo means red, azul means blue, verde means green, and amarillo means yellow.",q:"What does azul mean?",opts:["Blue","Green","Red"],a:0,why:"Azul means blue."}
+ ],
+ "SDG Goals":[
+  {title:"Goal 4: Quality Education",body:"UN Sustainable Development Goal 4 aims to make quality education inclusive and accessible to everyone.",q:"Which action supports quality education?",opts:["Sharing books with others","Leaving lights on all day","Throwing away notebooks"],a:0,why:"Sharing books supports learning and access to education."},
+  {title:"Goal 13: Climate Action",body:"Climate action means taking steps to reduce climate change and prepare for its effects.",q:"Which choice can help save energy?",opts:["Leaving every light on","Turning off unused lights","Leaving the tap running"],a:1,why:"Turning off lights saves energy."},
+  {title:"Goal 6: Clean Water",body:"Clean water and sanitation are essential for health and wellbeing.",q:"Which habit helps avoid wasting water?",opts:["Leaving taps running","Fixing leaking taps","Taking long baths every day"],a:1,why:"Fixing leaks saves water."},
+  {title:"Goal 14: Life Below Water",body:"This goal aims to protect oceans and marine life from pollution and damage.",q:"Which action helps ocean life?",opts:["Throwing plastic into rivers","Using less single-use plastic","Leaving litter on beaches"],a:1,why:"Using less single-use plastic helps protect the ocean."}
+ ],
+ "Environment":[
+  {title:"The 3 Rs",body:"Reduce means use less. Reuse means use something again. Recycle means process materials into new products.",q:"Using a lunchbox many times is an example of…",opts:["Reuse","Waste","Replace"],a:0,why:"Reusing the lunchbox means using it again."},
+  {title:"Protect habitats",body:"A habitat is a place where an organism lives. Keeping natural places clean helps living things.",q:"What is a habitat?",opts:["A place where something lives","A type of food","A wooden toy"],a:0,why:"A habitat is a living place."},
+  {title:"Pollinators",body:"Bees, butterflies, and other pollinators help many plants reproduce by moving pollen between flowers.",q:"What do pollinators help many plants do?",opts:["Make plastic","Reproduce","Float"],a:1,why:"Pollinators help plants reproduce."},
+  {title:"Biodiversity",body:"Biodiversity means the variety of living things in an area, including different species and ecosystems.",q:"What does biodiversity describe?",opts:["Variety of life","Only one type of animal","A building"],a:0,why:"Biodiversity is the variety of life."}
+ ],
+ "History":[
+  {title:"A clue from the past",body:"Historians learn about the past using evidence such as letters, objects, buildings, photographs, and written records.",q:"Which item could be a historical source?",opts:["A museum artefact","A new pair of trainers","A selfie"],a:0,why:"Older objects are useful historical evidence."},
+  {title:"Timelines tell stories",body:"A timeline places events in chronological order, from earlier to later.",q:"Which event happened first?",opts:["The year 1800","The year 1950","The year 2020"],a:0,why:"1800 is earlier than 1950 and 2020."},
+  {title:"Ancient civilisations",body:"Ancient civilisations developed communities, systems of writing, trade, art, and impressive buildings.",q:"Why do archaeologists study old objects?",opts:["To learn about the past","To make new music","To plant seeds"],a:0,why:"Old objects help us study history."}
+ ],
+ "Geography":[
+  {title:"Continents and oceans",body:"Earth has seven commonly recognised continents and five major oceans.",q:"Which one is an ocean?",opts:["Pacific Ocean","Sahara Desert","Himalayas"],a:0,why:"The Pacific is an ocean."},
+  {title:"Maps use symbols",body:"Maps use symbols, colours, labels, and keys to represent places and features.",q:"What does a map key explain?",opts:["What map symbols mean","How to cook dinner","The weather today"],a:0,why:"A map key explains symbols."},
+  {title:"Weather and climate",body:"Weather describes short-term conditions. Climate describes typical weather patterns over a long period.",q:"Which describes climate?",opts:["Typical patterns over many years","Rain today","A storm this afternoon"],a:0,why:"Climate is the long-term pattern."}
+ ],
+ "Computing":[
+  {title:"Algorithms are instructions",body:"An algorithm is a set of steps used to solve a problem or complete a task.",q:"Which is an algorithm?",opts:["Steps for making a sandwich","A random colour","A song lyric"],a:0,why:"A sequence of steps is an algorithm."},
+  {title:"Stay safe online",body:"Keep passwords private, think before sharing personal information, and ask a trusted adult when something online worries you.",q:"What should you do with your password?",opts:["Keep it private","Post it online","Tell everyone"],a:0,why:"Passwords should stay private."},
+  {title:"Spot the pattern",body:"Computers can follow clear rules and patterns to process information.",q:"What comes next: 2, 4, 6, 8, ...?",opts:["10","11","14"],a:0,why:"The pattern adds 2 each time."}
+ ],
+ "Art & Design":[
+  {title:"Primary colours",body:"In traditional paint mixing, red, yellow, and blue are often taught as primary colours.",q:"Which is a primary colour in traditional paint mixing?",opts:["Yellow","Purple","Green"],a:0,why:"Yellow is a primary colour."},
+  {title:"Lines create mood",body:"Artists use line, shape, colour, texture, and space to communicate ideas and feelings.",q:"Which is an element of art?",opts:["Texture","Homework deadline","Lunch break"],a:0,why:"Texture is an art element."}
+ ],
+ "Music":[
+  {title:"Feel the beat",body:"A beat is the steady pulse in music. Rhythm is a pattern of sounds and silences over time.",q:"What is a steady pulse in music called?",opts:["The beat","A map key","A paragraph"],a:0,why:"The beat is the steady pulse."},
+  {title:"High and low sounds",body:"Pitch describes how high or low a sound seems. Melody is a sequence of notes heard as a tune.",q:"What does pitch describe?",opts:["How high or low a sound is","How long a song lasts","The type of drum"],a:0,why:"Pitch describes how high or low a sound is."}
+ ]
+};
+const translations = {
+  en: {
+    'Welcome to Sunny! ☀️':'Welcome to Sunny! ☀️','Before we start, choose your username. Your points and level will be saved under your name!':'Before we start, choose your username. Your points and level will be saved under your name!','🌐 Language / Idioma':'🌐 Language / Idioma','👤 Your username':'👤 Your username','🎲 Make me a random username!':'🎲 Make me a random username!','Start Learning 🚀':'Start Learning 🚀','Your learning buddy':'Your learning buddy','Style Shop':'Style Shop','Sunny says:':'Sunny says:','PICK A WORLD':'PICK A WORLD','🏆 High-score board':'🏆 High-score board','Made for curious minds 🌱 · Scores are saved only in this browser on this device.':'Made for curious minds 🌱 · Scores are saved only in this browser on this device.','Maths':'Maths','Science':'Science','English':'English','French':'French','Spanish':'Spanish','SDG Goals':'SDG Goals','Environment':'Environment','Welcome to Sunny\'s learning world! 🌈':'Welcome to Sunny\'s learning world! 🌈','Learn a little, try a quiz, earn points, and level up. Each correct answer earns':'Learn a little, try a quiz, earn points, and level up. Each correct answer earns','📚 School subjects':'📚 School subjects','Maths, Science, English, French and Spanish':'Maths, Science, English, French and Spanish','🌍 Big world goals':'🌍 Big world goals','Start a quiz ✨':'Start a quiz ✨','Customize Sunny':'Customize Sunny','Switch username':'Switch username','⬅️ Back home':'⬅️ Back home','Check answer':'Check answer','Home':'Home','Sunny’s learning journey' : 'Sunny’s learning journey', 'Style Shop':'Style Shop', 'Please enter a username to begin!':'Please enter a username to begin!','✨ Your random username is ready! You can edit it if you like.':'✨ Your random username is ready! You can edit it if you like.'
+  },
+  es: {
+    'Welcome to Sunny! ☀️':'¡Bienvenido a Sunny! ☀️','Before we start, choose your username. Your points and level will be saved under your name!':'Antes de empezar, elige tu nombre de usuario. ¡Tus puntos y nivel se guardarán bajo tu nombre!','🌐 Language / Idioma':'🌐 Idioma','👤 Your username':'👤 Tu nombre de usuario','🎲 Make me a random username!':'🎲 ¡Crear un nombre aleatorio!','Start Learning 🚀':'¡Empezar a aprender! 🚀','Your learning buddy':'Tu compañero de aprendizaje','Style Shop':'Tienda de estilo','Sunny says:':'Sunny dice:','PICK A WORLD':'ELIGE UN MUNDO','🏆 High-score board':'🏆 Tabla de puntuaciones','Made for curious minds 🌱 · Scores are saved only in this browser on this device.':'Hecho para mentes curiosas 🌱 · Las puntuaciones se guardan solo en este navegador de este dispositivo.','Maths':'Matemáticas','Science':'Ciencias','English':'Inglés','French':'Francés','Spanish':'Español','SDG Goals':'Objetivos ODS','Environment':'Medioambiente','Welcome to Sunny\'s learning world! 🌈':'¡Bienvenido al mundo de aprendizaje de Sunny! 🌈','Learn a little, try a quiz, earn points, and level up. Each correct answer earns':'Aprende un poco, prueba un cuestionario, gana puntos y sube de nivel. Cada respuesta correcta gana','📚 School subjects':'📚 Asignaturas','Maths, Science, English, French and Spanish':'Matemáticas, Ciencias, Inglés, Francés y Español','🌍 Big world goals':'🌍 Grandes objetivos mundiales','Start a quiz ✨':'Empezar un cuestionario ✨','Customize Sunny':'Personalizar a Sunny','Switch username':'Cambiar nombre de usuario','⬅️ Back home':'⬅️ Volver al inicio','Check answer':'Comprobar respuesta','Home':'Inicio', 'Please enter a username to begin!':'¡Escribe un nombre de usuario para empezar!','✨ Your random username is ready! You can edit it if you like.':'✨ ¡Tu nombre aleatorio está listo! Puedes editarlo si quieres.'
+  }
+};
+let language=storageSafeLanguage();
+function storageSafeLanguage(){try{return localStorage.getItem('sunnyLanguage')==='es'?'es':'en'}catch(e){return 'en'}}
+function tr(text){return (translations[language]&&translations[language][text])||text}
+function applyLanguage(){
+  document.documentElement.lang=language;
+  const ls=document.getElementById('languageSelect'), ll=document.getElementById('loginLanguage');
+  if(ls)ls.value=language;if(ll)ll.value=language;const nameInput=document.getElementById('loginName');if(nameInput)nameInput.placeholder=language==='es'?'p. ej. EstrellaAprendiz':'e.g. StarLearner';
+}
+function setLanguage(next){language=next==='es'?'es':'en';try{localStorage.setItem('sunnyLanguage',language)}catch(e){};applyLanguage();}
+const storage = {
+ get(key,fallback){try{const v=localStorage.getItem(key);return v===null?fallback:JSON.parse(v)}catch(e){return fallback}},
+ set(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(e){}}
+};
+let playerName="";
+let points=0;
+let keys=0;
+let category="Maths", lesson=null, answered=false;
+let seen={};
+let learningPrefs={subjects:Object.keys(lessons),level:"explorer"};
+const content=document.getElementById("content"),buddy=document.getElementById("buddyText"),stats=document.getElementById("stats"),nav=document.getElementById("nav");
+const levelFor=p=>1+Math.floor(p/30);
+function playerKey(name){return String(name).trim().toLocaleLowerCase()}
+function loadPlayer(name){
+  playerName=String(name).trim().slice(0,20);
+  const all=storage.get("sunnyPlayerPoints",{});
+  points=Number(all[playerKey(playerName)]||0)||0;
+  const keyWallet=storage.get("sunnyPlayerKeys",{});keys=Math.max(0,Number(keyWallet[playerKey(playerName)]||0)||0);
+  storage.set("sunnyName",playerName);
+  learningPrefs=storage.get("sunnyPath_"+playerKey(playerName),{subjects:Object.keys(lessons),level:"explorer"});
+  if(!Array.isArray(learningPrefs.subjects))learningPrefs.subjects=Object.keys(lessons);
+  if(!learningPrefs.subjects.length)learningPrefs.subjects=["Science"];
+  if(!["starter","explorer","challenge"].includes(learningPrefs.level))learningPrefs.level="explorer";
+  if(typeof makeNav==='function')makeNav();
+  updateStats();
+  buddy.textContent=`Hi ${playerName}! Let's discover something awesome! ☀️`;
+}
+function saveKeys(){
+  const wallet=storage.get("sunnyPlayerKeys",{});
+  wallet[playerKey(playerName)]=keys;
+  storage.set("sunnyPlayerKeys",wallet);
+}
+function updateStats(){
+  stats.textContent=language==='es'?`👤 ${playerName||"Aprendiz"} · ⭐ ${points} puntos · NIVEL ${levelFor(points)}`:`👤 ${playerName||"Learner"} · ⭐ ${points} points · LEVEL ${levelFor(points)}`;
+  if(playerName){
+    const all=storage.get("sunnyPlayerPoints",{});
+    all[playerKey(playerName)]=points;
+    storage.set("sunnyPlayerPoints",all);
+  }
+}
+function showLogin(){
+  document.body.classList.add("login-open");
+  document.getElementById("loginScreen").style.display="flex";
+  const remembered=storage.get("sunnyName","");
+  if(remembered) document.getElementById("loginName").value=remembered;
+  document.getElementById("loginName").focus();
+}
+document.getElementById("randomName").addEventListener("click",function(){
+  const first = ["Sunny","Starry","Cosmic","Happy","Clever","Bouncy","Misty","Rainbow","Tiny","Sparkly","Brave","Jolly","Peachy","Mighty","Curious"];
+  const second = ["Panda","Penguin","Comet","Cookie","Explorer","Doodle","Otter","Dragon","Moonbeam","Sprout","Fox","Koala","Pixel","Bee","Unicorn"];
+  const username = first[Math.floor(Math.random()*first.length)] + second[Math.floor(Math.random()*second.length)] + Math.floor(10+Math.random()*90);
+  const input = document.getElementById("loginName");
+  input.value = username;
+  document.getElementById("loginError").textContent = "✨ Your random username is ready! You can edit it if you like.";
+  input.focus();
+});
+document.getElementById("loginForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const name=document.getElementById("loginName").value.trim().replace(/\s+/g," ").slice(0,20);
+  if(!name){document.getElementById("loginError").textContent="Please enter a username to begin!";return;}
+  document.getElementById("loginError").textContent="";
+  loadPlayer(name);
+  document.getElementById("loginScreen").style.display="none";
+  document.body.classList.remove("login-open");
+  home();
+});
+function home(){
+  content.innerHTML=`<h1>Welcome to Sunny's learning world! 🌈</h1><p class="muted">Learn a little, try a quiz, earn points, and level up. Each correct answer earns <b>10 points</b>.</p>`;
+}
+showLogin();
+</script>
+</body>
+</html>
